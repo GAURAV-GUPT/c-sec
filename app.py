@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from datetime import datetime
 import json
+from typing import Dict, List, Optional
 from openai import OpenAI
 from dotenv import load_dotenv
 
