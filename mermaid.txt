@@ -1,0 +1,70 @@
+graph TB
+    %% Styling
+    classDef user fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    classDef ui fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
+    classDef agent fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px;
+    classDef tool fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+    classDef storage fill:#fbe9e7,stroke:#bf360c,stroke-width:2px;
+    classDef external fill:#ffebee,stroke:#b71c1c,stroke-width:2px;
+
+    %% User Interface Layer
+    USER[User / Security Analyst]:::user
+    subgraph UI_Layer [Streamlit Web Interface]
+        ST_UI[Streamlit UI]:::ui
+        ST_SIDEBAR[Sidebar Controls]:::ui
+        ST_MAIN[Main Dashboard]:::ui
+    end
+
+    %% Agent Layer
+    subgraph Agent_Layer [AI Security Agents]
+        MONITOR[Monitor Agent<br/>Detects script executions]:::agent
+        ANALYST[Analyst Agent<br/>Analyzes threats]:::agent
+        COMMANDER[Commander Agent<br/>Takes action]:::agent
+    end
+
+    %% Tool Layer
+    subgraph Tool_Layer [Security Tools]
+        ALLOWLIST_TOOL[Allowlist Checker]:::tool
+        AI_ANALYZER[AI Threat Analyzer]:::tool
+        ACTION_TOOL[Action Executor]:::tool
+        LOGGER[SIEM Logger]:::tool
+    end
+
+    %% Storage Layer
+    subgraph Storage_Layer [Data Storage]
+        ALLOWLIST_DB[(Allowlist Database)]:::storage
+        EVENT_DB[(Security Events DB)]:::storage
+    end
+
+    %% External Services
+    subgraph External_Services [External APIs]
+        OPENAI[OpenAI API]:::external
+    end
+
+    %% Data Flow
+    USER --> ST_UI
+    ST_UI --> ST_SIDEBAR
+    ST_UI --> ST_MAIN
+    
+    ST_SIDEBAR --> MONITOR
+    ST_MAIN --> EVENT_DB
+    
+    MONITOR --> LOGGER
+    MONITOR --> ANALYST
+    
+    ANALYST --> ALLOWLIST_TOOL
+    ANALYST --> AI_ANALYZER
+    ANALYST --> LOGGER
+    ANALYST --> COMMANDER
+    
+    ALLOWLIST_TOOL --> ALLOWLIST_DB
+    AI_ANALYZER --> OPENAI
+    
+    COMMANDER --> ACTION_TOOL
+    COMMANDER --> LOGGER
+    
+    LOGGER --> EVENT_DB
+    
+    %% Reverse data flow for display
+    EVENT_DB -.-> ST_MAIN
+    ALLOWLIST_DB -.-> ST_MAIN
